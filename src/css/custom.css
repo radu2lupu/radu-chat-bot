@@ -1,0 +1,102 @@
+body {
+  background-color: #fff;
+  font-size: larger;
+}
+
+.rsc-container {
+	margin-top: 10%;
+	width: 100%;
+	background-color: #fff;
+	box-shadow: none;
+	border-radius: 0px;
+}
+
+.rsc-content {
+	height: 82vh;
+	overflow-y: auto;
+	max-height: 1200px;
+}
+
+.rsc-cs ,.rsc-ts-bubble, .rsc-os-option, .rsc-os-option-element, .rsc-input {
+	font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #261822;
+}
+
+.rsc-ts-bubble, .rsc-os-option, .rsc-os-option-element, .rsc-input {
+	background-color: #fff;
+	font-size: 1rem;
+	font-weight: 900;
+	box-shadow: none;
+	margin: 0
+}
+
+.rsc-input:disabled {
+	color: red;
+}
+
+.rsc-ts {
+	align-items: center;
+}
+
+.rsc-os {
+	text-align: center;
+}
+
+.rsc-os-option-element {
+	color: #7F196C;
+}
+
+.rsc-ts-image {
+	border-radius: 50%;
+	width: 4rem;
+	height: 4rem;
+	box-shadow: none;
+}
+
+.rsc-footer {
+	border-radius: 10px;
+}
+
+.rsc-input {
+	
+}
+
+.container {
+  max-width: 1500px;
+}
+
+a:hover {
+	color: red;
+}
+
+@media (min-width: 550px) {
+	.rsc-ts-bubble, .rsc-os-option, .rsc-os-option-element, .rsc-input {
+		font-size: 2rem;
+	}
+	.rsc-content {
+		height: 70vh;
+	}
+	.rsc-ts-image {
+		width: 7rem;
+		height: 7rem;
+	}
+}
+
+::-webkit-scrollbar-track {
+	-webkit-box-shadow: 0;
+	background-color: #fff;
+	color: #fff;
+}
+
+::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #fff;
+	border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb
+{
+	background-color: #2E0927;
+	border-radius: 10px;
+}
