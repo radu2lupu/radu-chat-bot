@@ -2,8 +2,7 @@ import React from 'react';
 import News from './News';
 
 const NewsList = props => { 
-  
-  const results = props.data;
+  const results = props.results;
   let news;
   if (results.length > 0) {
     news = results.map(item => 

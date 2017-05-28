@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ChatBot, { Loading } from 'react-simple-chatbot';
-import axios from 'axios';
+import ChatBot from 'react-simple-chatbot';
 
-import Job from './resume/Job';
-import AboutMe from './resume/AboutMe';
 import Contact from './resume/Contact';
 
-import GifList from './gifs/GifList';
-import NewsList from './news/NewsList';
+
+import GifBlock from './gifs/GifBlock';
+import NewsBlock from './news/NewsBlock';
 
 import StoredResponse from './StoredResponse';
 import Resume from './resume/Resume';
@@ -16,22 +14,6 @@ import Resume from './resume/Resume';
 import raduLupu from '../img/RaduLupu.jpg';
 import userAvatar from '../img/UserAvatar.png';
 import { summary, keyPoints } from '../data/resume';
-
-const getNewsSources = () => {
-  const sources = (() => {
-    axios.get(`https://newsapi.org/v1/sources?language=en&apiKey=698e5e8ae3de4b3b9d4ebad388d60d87`)
-    .then(response => {
-      this.sources = response.data.sources;
-    })
-    .catch(error => {
-      console.log("Error fetching data", error);
-    });
-  })();
-  let newsSources = [];
-  console.log(sources);
-  
-  return newsSources;
-};
 
 const avatarStyle = {
   'borderRadius': '50%',
@@ -60,7 +42,7 @@ const contentStyle = {
 };
 
 const bubbleStyle = {
-  'backgroundColor': '#010440',
+  'backgroundColor': 'transparent',
   'fontSize': '1rem',
   'boxShadow': 'none',
   'margin': '0'
@@ -72,163 +54,6 @@ const customStyle = {
 };
 
 const userFontColor = '#fff';
-
-class NewsBlock extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-      result: '',
-      trigger: false,
-    };
-
-    this.triggetNext = this.triggetNext.bind(this);
-  }
-
-  componentWillMount() {
-    const self = this;
-    const { steps } = this.props;
-    const query = 'the-next-web';
-    
-    const performSearch = (query = 'the-next-web') => {
-      axios.get(`https://newsapi.org/v1/articles?source=${query}&sortBy=latest&apiKey=698e5e8ae3de4b3b9d4ebad388d60d87`)
-        .then(responseData => {
-          this.setState({ 
-            result: responseData.data.articles,
-            loading: false
-          });
-        })
-        .catch(error => {
-          console.log("Error fetching data", error);
-        });
-    };
-    performSearch(query);
-  }
-
-  triggetNext() {
-    this.setState({ trigger: true }, () => {
-      this.props.triggerNextStep();
-    });
-  }
-
-  render() {
-    const { loading, result, trigger } = this.state;
-
-    return (
-      <div className="news">
-        { loading ? <Loading /> : <NewsList data={result} /> }
-        {
-          !loading &&
-          <div
-            style={{
-              textAlign: 'center',
-              marginTop: 20,
-            }}
-          >
-            {
-              !trigger &&
-              <button
-                onClick={() => this.triggetNext()}
-              >
-                Go back
-              </button>
-            }
-          </div>
-        }
-      </div>
-    );
-  }
-}
-
-NewsBlock.propTypes = {
-  steps: PropTypes.object,
-  triggerNextStep: PropTypes.func,
-};
-
-NewsBlock.defaultProps = {
-  steps: undefined,
-  triggerNextStep: undefined,
-};
-
-class GifBlock extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-      result: '',
-      trigger: false,
-    };
-
-    this.triggetNext = this.triggetNext.bind(this);
-  }
-
-  componentWillMount() {
-    const self = this;
-    const { steps } = this.props;
-    const query = steps.searchGif.value;
-    
-    const performSearch = (query = 'cats') => {
-      axios.get(`https://api.giphy.com/v1/gifs/search?q=${query}&limit=24&api_key=dc6zaTOxFJmzC`)
-        .then(responseData => {
-          console.log(responseData)
-          this.setState({ 
-            result: responseData.data.data,
-            loading: false
-          });
-        })
-        .catch(error => {
-          console.log("Error fetching data", error);
-        });
-    };
-    performSearch(query);
-  }
-
-  triggetNext() {
-    this.setState({ trigger: true }, () => {
-      this.props.triggerNextStep();
-    });
-  }
-
-  render() {
-    const { loading, result, trigger } = this.state;
-
-    return (
-      <div className="gifs">
-        { loading ? <Loading /> : <GifList results={result} /> }
-        {
-          !loading &&
-          <div
-            style={{
-              textAlign: 'center',
-              marginTop: 20,
-            }}
-          >
-            {
-              !trigger &&
-              <button
-                onClick={() => this.triggetNext()}
-              >
-                Go back
-              </button>
-            }
-          </div>
-        }
-      </div>
-    );
-  }
-}
-
-GifList.propTypes = {
-  steps: PropTypes.object,
-  triggerNextStep: PropTypes.func,
-};
-
-GifList.defaultProps = {
-  steps: undefined,
-  triggerNextStep: undefined,
-};
 
 class GeneralData extends Component {
   constructor(props) {
@@ -262,8 +87,6 @@ GeneralData.defaultProps = {
 
 class RaduChatBot extends Component {
   render() {
-    const newsSources = getNewsSources();
-    console.log(newsSources);
     function isNumberValidator(value) {
       if (isNaN(value)) {
         return 'The value should be a number!';
@@ -329,13 +152,26 @@ class RaduChatBot extends Component {
                   options: [
                     { value: 1, label: 'I\'d like to know more about you.', trigger: 'me-options-1' },
                     { value: 3, label: 'I want to search for a gif', trigger: 'searchPrompt' },
-                    { value: 5, label: 'I want some tech news', trigger: 'newsResult' },
+                    { value: 5, label: 'I want some news', trigger: 'newsPrompt' },
                     { value: 4, label: 'I don\'t want to be here anymore! Bye!', trigger: 'conversation-end' },
                   ],
                 },
                 {
+                  id: 'newsPrompt',
+                  message: 'What type of news are you interested in?',
+                  trigger: 'newsOptions'
+                },
+                {
                   id: 'newsOptions',
-                  options: newsSources
+                  options: [
+                    { value: 'technology', label: 'Tech', trigger: 'newsResult' },
+                    { value: 'business', label: 'Business', trigger: 'newsResult' },
+                    { value: 'science-and-nature', label: 'Science and Nature', trigger: 'newsResult' },
+                    { value: 'entertainment', label: 'Entertainment', trigger: 'newsResult' },
+                    { value: 'gaming', label: 'Gaming', trigger: 'newsResult' },
+                    { value: 'sport', label: 'Sport', trigger: 'newsResult' },
+                    { value: 'general', label: 'General', trigger: 'newsResult' },
+                  ]
                 },
                 {
                   id: 'searchPrompt',

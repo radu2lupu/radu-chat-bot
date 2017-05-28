@@ -4,7 +4,7 @@ body {
 }
 
 .rsc-os-option, .rsc-os-option-element {
-	background-color: #010440 !important;
+	background-color: transparent !important;
 	box-shadow: none !important;
 }
 
