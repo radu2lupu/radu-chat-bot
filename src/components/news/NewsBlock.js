@@ -28,38 +28,39 @@ class NewsBlock extends Component {
 
   componentWillMount() {
     const { steps } = this.props;
-    console.log(steps);
     const category = steps.newsOptions.value;
+    
+    const getArticlesForSources = (sources) => {
+      const stories = [];
+      if(stories.length < 50) {
+        for( let i = 0; i < sources.length; i ++ ) {
+          axios.get(`https://newsapi.org/v1/articles?source=${sources[i].id}&apiKey=698e5e8ae3de4b3b9d4ebad388d60d87`)
+          .then(responseData => {
+            const storyBySource = responseData.data.articles;
+            if(storyBySource) {
+              for( let i = 0; i < storyBySource.length; i ++ ) {
+                if(storyBySource[i].urlToImage && storyBySource[i].urlToImage.includes('https') && !stories.includes(storyBySource[i])) {
+                  stories.push(storyBySource[i]);
+                }
+              }
+            }
+            this.setState({ 
+              results: stories,
+            });
+          })
+          .catch(error => {
+            console.log("Error fetching data", error);
+          });
+        }
+      }
+    };
     
     const getSourcesForCategory = (category) => {
       axios.get(`https://newsapi.org/v1/sources?language=en&category=${category}&apiKey=698e5e8ae3de4b3b9d4ebad388d60d87`)
         .then(responseData => {
           if(responseData.data.sources) {
             const sources = responseData.data.sources;
-            const stories = [];
-            console.log(sources);
-            if(stories.length < 50) {
-              for( let i = 0; i < sources.length; i ++ ) {
-              const source = sources[i].id;
-              axios.get(`https://newsapi.org/v1/articles?source=${source}&apiKey=698e5e8ae3de4b3b9d4ebad388d60d87`)
-                .then(responseData => {
-                  const storyBySource = responseData.data.articles;
-                  if(storyBySource) {
-                    for( let i = 0; i < storyBySource.length; i ++ ) {
-                      if(storyBySource[i].urlToImage && storyBySource[i].urlToImage.includes('https')) {
-                        stories.push(storyBySource[i]);
-                      }
-                    }
-                  }
-                  this.setState({ 
-                    results: stories,
-                  });
-                })
-                .catch(error => {
-                  console.log("Error fetching data", error);
-                });
-              }
-            }
+            getArticlesForSources(sources);
           }
           this.setState({ 
             loading: false,
